@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'bases/base_head.html' %}
+    {% block custom_css %}{% endblock %}
+</head>
+<body>
+    {% include 'bases/navbar.html' %}
+
+    <div class="layout__body">
+        <div class="inner">
+            {% block main_content %}{% endblock %}
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="inner">
+            <span class="text-muted u-fs14">
+                <a href="https://www.bethel.edu/about/contact/questions-comments">Comments &amp; Questions</a> | <a href="https://www.bethel.edu">www.bethel.edu</a><br>
+                Copyright © 2018 Bethel University
+            </span>
+        </div>
+    </footer>
+
+    {% include 'bases/base_footer_scripts.html' %}
+    {% block custom_js %}{% endblock %}
+</body>
+</html>

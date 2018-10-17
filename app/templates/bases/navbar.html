@@ -1,0 +1,12 @@
+<nav class="xnavbar navbar-inverse navbar__main" style="background: #123563">
+    <div class="inner">
+        <div class="navbar__logo-tabs">
+            <a class="logo__link" href="{{ url_for('HomeView:index') }}">
+                <img class="logo--main" src="https://www.bethel.edu/cdn/images/logo.png" alt="Bethel University logo">
+            </a>
+            <div class="navbar__pages">
+                <a href="{{ url_for('HomeView:logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>

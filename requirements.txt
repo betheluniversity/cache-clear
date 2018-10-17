@@ -1,0 +1,4 @@
+Flask-Classy
+Flask
+werkzeug
+bu-cascade==3.11

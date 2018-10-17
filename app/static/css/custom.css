@@ -1,0 +1,55 @@
+html, body {
+    background: #fafafa;
+}
+
+img, canvas, iframe, video, svg, select, textarea {
+	max-width: 100%;
+}
+
+img {
+	font-size: .7em;
+}
+
+.inner {
+	max-width: 1600px;
+	margin: 0 auto;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+.bkg--blue {
+	background: #0069aa;
+}
+
+.bkg--navy {
+	background: #0f2c52;
+}
+
+.bkg--white {
+	background: #fff;
+}
+
+footer.footer {
+	border-top: 1px solid #eee;
+	padding: 3em 1em;
+}
+
+.btn-primary{
+  color:#fff;
+  background-color:#0056B5;
+  border-color:#0056B5
+}
+
+.bg-success {
+    background-color: #19662B!important;
+}
+
+.badge-primary {
+    color: #fff;
+    background-color: #123563;
+}
+
+.badge-success {
+    color: #fff;
+    background-color: #19671B;
+}

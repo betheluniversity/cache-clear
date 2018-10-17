@@ -1,0 +1,11 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+.idea
+
+config.py
+
+*.db
+
+sqlite_db_repository
