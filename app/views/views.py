@@ -35,8 +35,8 @@ class HomeView(FlaskView):
         if 'user_cascade_groups' not in session.keys():
             self._load_user_cascade_groups()
 
-        if 'Administrators' not in session['user_cascade_groups']:
-            abort(403)
+        # if 'Administrators' not in session['user_cascade_groups']:
+        #     abort(403)
 
     def _load_user_cascade_groups(self):
         try:
