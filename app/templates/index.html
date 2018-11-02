@@ -38,19 +38,13 @@
 
 {% block main_content %}
     <div class="content">
-        <div class="container-fluid">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="content">
-                        <label>Path
-                            <input type="text" name="path" id="path"/>
-                        </label>
-                        <a id="submit" class="btn btn-primary">Submit</a>
-                    </div>
-                </div>
-                <p id="output"></p>
-            </div>
+        <div class="form">
+            <label>Path
+                <input type="text" name="path" id="path"/>
+            </label>
+            <a id="submit" class="btn btn-primary">Submit</a>
         </div>
+        <p id="output"></p>
     </div>
 {% endblock %}
 
