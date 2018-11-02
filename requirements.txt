@@ -1,4 +1,5 @@
 Flask-Classy
 Flask
 werkzeug
-bu-cascade==3.11
+bu-cascade==2.285
+BeautifulSoup
