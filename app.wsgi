@@ -1,3 +1,11 @@
+#log to stderr instead of stdout
+
+activate_this = '/opt/tinker/env/bin/activate_this.py'
+execfile(activate_this, dict(__file__=activate_this))
+
+import logging, sys
+logging.basicConfig(stream=sys.stderr)
+
 import sys
 import os
 
