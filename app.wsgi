@@ -1,6 +1,6 @@
 #log to stderr instead of stdout
 
-activate_this = '/opt/cache-clear/env/bin/activate_this.py'
+activate_this = '/opt/cache_clear/env/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
 import logging, sys
