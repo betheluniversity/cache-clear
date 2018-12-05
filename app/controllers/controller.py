@@ -22,7 +22,7 @@ def clear_image_cache(image_path):
     def path_on_filesystem(path):
         digest = hashlib.sha1(path.encode('utf-8')).hexdigest()
         return "%s/%s/%s" % (
-            app.config['THUMBOR_RESULT_STORAGE_LOCATION'].rstrip('/'),
+            app.config['THUMBOR_STORAGE_LOCATION'].rstrip('/'),
             digest[:2],
             digest[2:]
         )
