@@ -3,9 +3,7 @@ import fnmatch
 import hashlib
 import base64
 import os
-import thumbor.storages as storages
 from subprocess import call
-from Crypto.Cipher import AES
 
 from app import app
 
@@ -21,7 +19,7 @@ def clear_image_cache(image_path):
     def pad(s):
         return s + (16 - len(s) % 16) * "{"
 
-    def path_on_filesystem(self, path):
+    def path_on_filesystem(path):
         digest = hashlib.sha1(path.encode('utf-8')).hexdigest()
         return "%s/%s/%s" % (
             app.config['THUMBOR_RESULT_STORAGE_LOCATION'].rstrip('/'),
