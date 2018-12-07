@@ -3,4 +3,3 @@ Flask
 werkzeug
 bu-cascade==2.285
 BeautifulSoup
-thumbor
