@@ -38,7 +38,7 @@ def clear_image_cache(image_path):
         resp.append(encrypted_path)
 
         # remove the file at the path
-        call(['rm', path])
+        call(['rm', encrypted_path])
 
     # # now the result storage
     # file_name = image_path.split('/')[-1]
