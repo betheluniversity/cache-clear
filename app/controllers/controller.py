@@ -4,7 +4,7 @@ import hashlib
 import re
 import base64
 import os
-from subprocess import call
+import subprocess
 
 from app import app
 
@@ -38,7 +38,14 @@ def clear_image_cache(image_path):
         resp.append(encrypted_path)
 
         # remove the file at the path
-        call(['rm', encrypted_path])
+        subprocess.call(['rm', encrypted_path])
+
+    cmd = 'find /opt/thumbor/resized_images/v2/un/sa/unsafe/ -wholename "*/smart/*' + image_path + '"'
+    sp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    results = sp.communicate()[0].split()
+
+    for path in results:
+        subprocess.call(['rm', path])
 
     # # now the result storage
     # file_name = image_path.split('/')[-1]
