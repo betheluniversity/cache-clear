@@ -48,9 +48,11 @@ def clear_image_cache(image_path):
 
     for result_path in results:
         sp2 = subprocess.Popen('rm ' + result_path, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        response = sp2.stdout.readline()
+        resp.append(response)
         # response = subprocess.call(['rm', result_path])
-        # response = sp2.communicate()[0].split()
-        # resp.append(response)
+        response2 = sp2.communicate()[0].split()
+        resp.append(response2)
 
     # # now the result storage
     # file_name = image_path.split('/')[-1]
