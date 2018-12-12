@@ -40,12 +40,17 @@ def clear_image_cache(image_path):
         # remove the file at the path
         subprocess.call(['rm', encrypted_path])
 
+    # For local testing
+    # cmd = 'find /Users/josiahtillman/Desktop -wholename "*/TestFolder/*"'
     cmd = 'find /opt/thumbor/resized_images/v2/un/sa/unsafe/ -wholename "*/smart/*' + image_path + '"'
     sp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     results = sp.communicate()[0].split()
 
-    for path in results:
-        subprocess.call(['rm', path])
+    for result_path in results:
+        sp2 = subprocess.Popen('rm ' + result_path, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # response = subprocess.call(['rm', result_path])
+        # response = sp2.communicate()[0].split()
+        # resp.append(response)
 
     # # now the result storage
     # file_name = image_path.split('/')[-1]
