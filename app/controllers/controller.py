@@ -7,6 +7,7 @@ import os
 import subprocess
 
 from app import app
+from flask import Markup
 
 
 def clear_image_cache(image_path):
@@ -41,27 +42,26 @@ def clear_image_cache(image_path):
         subprocess.call(['rm', encrypted_path])
 
     # For local testing
-    # cmd = 'find /Users/josiahtillman/Desktop -wholename "*/TestFolder/*"'
-    cmd = 'find /opt/thumbor/resized_images/v2/un/sa/unsafe/ -wholename "*/smart/*' + image_path + '"'
+    cmd = 'find /Users/josiahtillman/Desktop -wholename "*/TestFolder/*"'
+    # cmd = 'find /opt/thumbor/resized_images/v2/un/sa/unsafe/ -wholename "*/smart/*' + image_path + '"'
     sp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     results = sp.communicate()[0].split()
 
+    matches = ""
+
     for result_path in results:
         sp2 = subprocess.Popen('rm ' + result_path, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        response = sp2.stdout.readline()
-        resp.append(response)
         # response = subprocess.call(['rm', result_path])
-        response2 = sp2.communicate()[0].split()
-        resp.append(response2)
+        response = sp2.communicate()
+        if response == ('', ''):
+            matches += "Deleted resize at \"" + result_path + "\"\n"
+        else:
+            matches += "ERROR: Couldn't delete resize at \"" + result_path + "\": \"" + response[0] + "\"\n"
 
-    # # now the result storage
-    # file_name = image_path.split('/')[-1]
-    # matches = []
-    # for root, dirnames, filenames in os.walk(app.config['THUMBOR_RESULT_STORAGE_LOCATION']):
-    #     for filename in fnmatch.filter(filenames, file_name):
-    #         matches.append(os.path.join(root, filename))
-    # for match in matches:
-    #     call(['rm', match])
-    # matches.extend(resp)
+    matches += "\n"
 
-    return str(resp)
+    # this iterates through resp two items at a time
+    for x, y in zip(*[iter(resp)] * 2):
+        matches += "Deleted original of \"" + str(x) + "\" at \n\"" + str(y) + "\"\n"
+
+    return matches

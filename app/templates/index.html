@@ -18,7 +18,7 @@
                 var input_data = {'path': urlpath};
                 var cacheurl = "{{ url_for('HomeView:post') }}";
                 $.post(cacheurl, input_data, function (data) {
-                    $("#output").text(data);
+                    $("#output").text(decodeURI(data));
                 });
             });
 
@@ -45,7 +45,7 @@
             </label>
             <a id="submit" class="btn btn-primary">Submit</a>
         </div>
-        <p id="output"></p>
+        <p id="output" style="white-space: pre"></p>
     </div>
 {% endblock %}
 

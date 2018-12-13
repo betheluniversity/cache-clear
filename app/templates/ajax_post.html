@@ -1,4 +1,4 @@
 {% if matches and cleared_path %}
-    Matches: {{ matches }}<br>
-    Cache cleared for path, "www.bethel.edu{{ cleared_path }}".
+{{ matches|safe }}
+Cache cleared for path, "www.bethel.edu{{ cleared_path }}".
 {% endif %}
