@@ -43,7 +43,7 @@ def clear_image_cache(image_path):
 
     # For local testing
     # cmd = 'find /Users/josiahtillman/Desktop -wholename "*/TestFolder/*"'
-    cmd = 'find /opt/thumbor/resized_images/v2/un/sa/unsafe/ -wholename "*/smart/*' + image_path + '"'
+    cmd = 'find ' + app.config['THUMBOR_RESULT_STORAGE_LOCATION'] + ' -wholename "*/smart/*' + image_path + '"'
     sp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     results = sp.communicate()[0].split()
 
