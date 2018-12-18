@@ -43,7 +43,7 @@ def clear_image_cache(image_path):
 
     # For local testing
     # cmd = 'find /Users/josiahtillman/Desktop -wholename "*/TestFolder/*"'
-    cmd = 'find ' + app.config['THUMBOR_RESULT_STORAGE_LOCATION'] + ' -wholename "*/smart/*' + image_path + '"'
+    cmd = 'find %s -wholename "*/smart/*%s"' % (app.config['THUMBOR_RESULT_STORAGE_LOCATION'], image_path)
     sp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     results = sp.communicate()[0].split()
 
@@ -54,14 +54,14 @@ def clear_image_cache(image_path):
         # response = subprocess.call(['rm', result_path])
         response = sp2.communicate()
         if response == ('', ''):
-            matches += "Deleted resize at \"" + result_path + "\"\n"
+            matches += "Deleted resize at \"%s\"\n" % result_path
         else:
-            matches += "ERROR: Couldn't delete resize at \"" + result_path + "\": \"" + response[0] + "\"\n"
+            matches += "ERROR: Couldn't delete resize at \"%s\": \"%s\"\n" % (result_path, response[0])
 
     matches += "\n"
 
     # this iterates through resp two items at a time
     for x, y in zip(*[iter(resp)] * 2):
-        matches += "Deleted original of \"" + str(x) + "\" at \n\"" + str(y) + "\"\n"
+        matches += "Deleted original of \"%s\" at \n\"%s\"\n" % (str(x), str(y))
 
     return matches
