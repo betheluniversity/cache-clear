@@ -41,7 +41,6 @@ def clear_image_cache(image_path):
         # remove the file at the path
         subprocess.call(['rm', encrypted_path])
 
-    # For local testing
     cmd = 'find %s -wholename "*/smart/*%s"' % (app.config['THUMBOR_RESULT_STORAGE_LOCATION'], image_path)
     sp = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     results = sp.communicate()[0].split()
