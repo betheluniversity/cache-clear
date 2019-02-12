@@ -1,7 +1,9 @@
 # Imports from Python global packages
+import re
 import time
 
 # Imports from packages installed from requirements.txt
+import ldap
 from flask import make_response, redirect, render_template, request, session, abort
 from flask_classy import FlaskView, route
 from werkzeug.datastructures import ImmutableMultiDict
@@ -12,6 +14,25 @@ from app.controllers.controller import clear_image_cache
 
 
 class HomeView(FlaskView):
+
+    # Extracted and adapted from MyBethel's _is_user_in_iam_groups() method
+    def _load_ldap_groups(self):
+        try:
+            con = ldap.initialize(app.config['LDAP_CONNECTION_INFO'])
+            con.simple_bind_s('BU\\svc-tinker', app.config['LDAP_SVC_TINKER_PASSWORD'])
+
+            # code to get all users in a group
+            raw_results = con.search_s('ou=Bethel Users,dc=bu,dc=ac,dc=bethel,dc=edu', ldap.SCOPE_SUBTREE,
+                                       "(|(&(sAMAccountName=%s)))" % session['username'])
+
+            groups = []
+            for result in raw_results:
+                for ldap_string in result[1]['memberOf']:
+                    groups.append(re.search('CN=([^,]*)', ldap_string).group(1))
+
+            return groups
+        except:
+            return []
 
     def before_request(self, name, **kwargs):
         # reset session if it has been more than 12 hours
@@ -32,23 +53,15 @@ class HomeView(FlaskView):
                 session['username'] = app.config['TEST_USERNAME']
             else:
                 session['username'] = request.environ.get('REMOTE_USER')
-        if 'user_cascade_groups' not in session.keys():
-            self._load_user_cascade_groups()
 
-        # if 'Administrators' not in session['user_cascade_groups']:
-        #     abort(403)
+        if 'user_groups' not in session.keys():
+            session['user_groups'] = self._load_ldap_groups()
 
-    def _load_user_cascade_groups(self):
-        try:
-            user_object = cascade_connector.read(session['username'], 'user')
-            allowed_groups = str(user_object['asset']['user']['groups'])
-            session['user_cascade_groups'] = allowed_groups.split(';')
-
-        # we are using a general except to make sure we are catching 503's
-        except:
-            session['mybethel_admin'] = False
-            session['mybethel_admin_support'] = False
-            session['user_cascade_groups'] = []
+        # Only let members of these IAM Groups use cache-clear; everyone else will be denied with a 403
+        authorized_groups = set(['CommMktg - Student Workers', 'CommMktg - Employees',
+                                 'ITS-WebServicesStudents', 'ITS - WebServices'])
+        if len(authorized_groups.intersection(set(session['user_groups']))) == 0:
+            return abort(403)
 
     def index(self):
         return render_template('index.html')
