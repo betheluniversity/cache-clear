@@ -1,0 +1,19 @@
+{% extends 'bases/base.html' %}
+
+{% set page_title = 'Advanced Ban' %}
+
+{% block main_content %}
+    <div class="content">
+        <p>
+            TODO: write text about Advanced Bans
+        </p>
+
+        {% if abform.errors %}
+            <span class="error">There were errors with the form submission.</span>
+        {% endif %}
+
+        <form id="rpapi_advancedban" method="POST" action="{{ url_for('RefreshPurgeView:advanced_ban_submit') }}">
+            {{ abform.render_to_html() | safe }}
+        </form>
+    </div>
+{% endblock %}

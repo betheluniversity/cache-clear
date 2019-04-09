@@ -1,0 +1,10 @@
+{% extends 'bases/base.html' %}
+
+{% set page_title = 'API Response' %}
+
+{% block main_content %}
+    <h1>Refresh/Purge API Response</h1>
+    <div style="border-color: black; border-width: 2px; border-style: solid;">
+         {{ api_response | safe }}
+    </div>
+{% endblock %}

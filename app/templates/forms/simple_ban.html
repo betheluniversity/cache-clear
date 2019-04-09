@@ -1,0 +1,19 @@
+{% extends 'bases/base.html' %}
+
+{% set page_title = 'Simple Ban' %}
+
+{% block main_content %}
+    <div class="content">
+        <p>
+            TODO: write text about Simple Bans
+        </p>
+
+        {% if sbform.errors %}
+            <span class="error">There were errors with the form submission.</span>
+        {% endif %}
+
+        <form id="rpapi_simpleban" method="POST" action="{{ url_for('RefreshPurgeView:simple_ban_submit') }}">
+            {{ sbform.render_to_html() | safe }}
+        </form>
+    </div>
+{% endblock %}

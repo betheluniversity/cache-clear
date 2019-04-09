@@ -9,3 +9,6 @@ cascade_connector = Cascade(app.config['SOAP_URL'], app.config['CASCADE_LOGIN'],
 
 from app.views.views import HomeView
 HomeView.register(app, route_base='/')
+
+from app.views.rpapi import RefreshPurgeView
+RefreshPurgeView.register(app, route_base='/rpapi')

@@ -1,0 +1,25 @@
+{% for name, field in fields %}
+<div id="field_container">
+    <div id="label">
+    {% if field.type != "SubmitField" %}
+        {{ field.label }}
+    {% endif %}
+    </div>
+    <div id="errors">
+    {% if field.errors | length > 0 %}
+        <span class="star">
+        {% for err in field.errors %}
+            {{ err }}<br/>
+        {% endfor %}
+        </span>
+    {% endif %}
+    </div>
+    <div id="field">
+        {% if field.type == "TextAreaField" %}
+            {{ field(rows="8") }}
+        {% else %}
+            {{ field }}
+        {% endif %}
+    </div>
+</div>
+{% endfor %}

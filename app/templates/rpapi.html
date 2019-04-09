@@ -1,0 +1,20 @@
+{% extends 'bases/base.html' %}
+
+{% set page_title = 'Refresh/Purge API' %}
+
+{% block main_content %}
+    <div class="content">
+        TODO: fill out this page with content, instead of a list of links.
+        <ul>
+            <li>
+                <a href="{{ url_for('RefreshPurgeView:purge_refresh_form') }}">Purge/Refresh</a>
+            </li>
+            <li>
+                <a href="{{ url_for('RefreshPurgeView:simple_ban_form') }}">Simple Ban</a>
+            </li>
+            <li>
+                <a href="{{ url_for('RefreshPurgeView:advanced_ban_form') }}">Advanced Ban</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
