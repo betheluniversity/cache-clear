@@ -37,17 +37,62 @@ def valid_purge_uri():
 
 def valid_ban_syntax():
 
-    def _ban_syntax(form, field):
-        # The regex for Ban expression syntax is a bit of a monster, and gets explained in
-        # https://github.com/betheluniversity/cache-clear/issues/2
-        syntax_pattern = re.compile(r'((req|obj)\.(url|status|http\.[A-Za-z0-9-]+)\s?(!?~|[!=]=)\s?([^ \n]+)(\s?&&\s?(?=(req|obj)\.(url|status|http\.[A-Za-z0-9-]+)\s?(!?~|[!=]=)\s?([^ \n]+)))?)+')
+    def _parse(form, field):
+        field_data = field.data
 
-        # If the value submitted matches that regex, then it is very likely to be syntactically valid as a Ban.
-        result = syntax_pattern.search(field.data)
-        if result is None:
-            raise ValidationError('That Ban expression wouldn\'t be valid')
+        # Because someone will inevitably try to use an OR instead of just ANDs, I'm adding this block of code
+        # before the syntax check.
+        or_pattern = re.compile(r'\|\|')
+        result = or_pattern.search(field_data)
+        if result:
+            raise ValidationError('Varnish Bans only support doing logical ANDs, not ORs. '
+                                  'You\'ll have to submit multiple Bans to achieve an OR.')
 
-    return _ban_syntax
+        _recursive_syntax_check(field_data.strip())
+
+    def _recursive_syntax_check(expression):
+        and_pattern_result = re.compile(r'(.*?)&&(.*)').search(expression)
+
+        if and_pattern_result is not None:
+            # If expression contains '&&', then it's a compound expression
+            left_comparison = and_pattern_result.group(1).strip()
+            right_expression = and_pattern_result.group(2).strip()
+
+            if right_expression == '':
+                raise ValidationError('Ban expressions can\'t end with an &&')
+
+            _recursive_syntax_check(left_comparison)
+            _recursive_syntax_check(right_expression)
+        else:
+            # If '&&' isn't in the expression, then it has been reduced down to a single comparison
+            comparison = re.compile(r'(.*?)\s+(.*?)\s+(.*)').search(expression)
+
+            if comparison is None:
+                raise ValidationError('Too few arguments in "%s". Make sure that they\'re all '
+                                      'separated by at least one space' % expression)
+
+            field = comparison.group(1)
+            field_check = re.compile(r'((req|obj)\.(http\.[A-Za-z0-9-]+)|req\.url|obj\.status)').search(field)
+            if field_check is None:
+                raise ValidationError('"%s" is not a valid Field for a Ban expression' % field)
+
+            operator = comparison.group(2)
+            valid_operators = ['==', '!=', '~', '!~']  # r'(!?~|[!=]=)'
+            if operator not in valid_operators:
+                raise ValidationError('"%s" is not a valid Operator for a Ban expression. The only operators '
+                                      'allowed are %s' % (operator, str(valid_operators)))
+
+            arg = comparison.group(3)
+            arg_has_whitespace = re.compile(r'\s+').search(arg)
+            if arg_has_whitespace is not None:
+                raise ValidationError('"%s" contains whitespace, which is not allowed for a Ban\'s argument' % arg)
+
+            arg_has_quotes = re.compile(r'[\'"]').search(arg)
+            if arg_has_quotes is not None:
+                raise ValidationError('"%s" contains either an apostrophe or quotation mark, which are not allowed '
+                                      'for a Ban\'s argument' % arg)
+
+    return _parse
 
 
 #######################################################
