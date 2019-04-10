@@ -81,7 +81,55 @@ a#submit {
 	margin-bottom: 4em;
 }
 
-input {
+input:not([type='radio']) {
 	width: 90%;
 	margin-left: 0.5em;
+}
+
+
+
+form {
+    margin: 1em 3em .5em 2.5em;
+    padding: .75em;
+}
+
+input[type=submit] {
+    width: auto;
+    font-size: .85em;
+    font-family: Gotham A, Gotham B, Helvetica, Arial, sans !important;
+    color: #FFFFFF !important;
+    background-color: #0069AA;
+    border: none;
+    padding: .625em 1em .625em 1em;
+    letter-spacing: 0.75px;
+    margin-bottom: 1.25em;
+}
+
+p.page-title {
+    font-family: Gotham A, Gotham B, Helvetica, Arial, sans !important;
+    font-size: 2.5em;
+    margin: .3em 0em 0em 1.3em;
+}
+
+p.page-info {
+    margin: .5em 0em 0em 3.5em;
+}
+
+p.note {
+    margin: 1em 3em -1.4em 3.4em;
+}
+
+.error {
+    color: red;
+}
+
+span.star {
+    font-family: Georgia, serif;
+    font-size: .85em;
+    color: red;
+}
+
+span.warning {
+    font-style: italic;
+    font-size: .8em;
 }

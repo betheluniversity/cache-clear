@@ -3,14 +3,18 @@
 {% set page_title = 'Purge/Refresh' %}
 
 {% block main_content %}
-    <div class="content">
-        <p>
+    <div>
+        <p class="page-info">
             TODO: write text about Purging and Refreshing
         </p>
 
         {% if prform.errors %}
             <span class="error">There were errors with the form submission.</span>
         {% endif %}
+
+        <p class="note">
+            <span class="star">* </span><span class="warning"> All fields are required</span>
+        </p>
 
         <form id="rpapi_purgerefresh" method="POST" action="{{ url_for('RefreshPurgeView:purge_refresh_submit') }}">
             {{ prform.render_to_html() | safe }}

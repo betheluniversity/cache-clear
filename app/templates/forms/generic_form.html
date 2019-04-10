@@ -17,6 +17,9 @@
     <div id="field">
         {% if field.type == "TextAreaField" %}
             {{ field(rows="8") }}
+        {% elif field.type == "SubmitField" %}
+            <br/>
+            {{ field }}
         {% else %}
             {{ field }}
         {% endif %}
