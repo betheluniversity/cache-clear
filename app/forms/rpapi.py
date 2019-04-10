@@ -136,8 +136,11 @@ class PurgeRefreshForm(RenderableForm):
 class SimpleBanForm(RenderableForm):
     # Because Bans are regex-compatible, it's not practical to do any type of data validation.
     # As long as there's a value submitted, we can pass it on to the Refresh/Purge API.
-    host = StringField('Domain:', [validators.DataRequired()])
-    url = StringField('URL:', [validators.DataRequired()])
+
+    # TODO: add validation to make sure that no one can ban all content from being cached
+    # (req.http.host ~ .* && req.url ~ .*)
+    host = StringField('Domain:', [validators.DataRequired()], default='cdn[1-4]\.bethel\.edu')
+    url = StringField('URL:', [validators.DataRequired()], default='/images/.*\.png')
     submit = SubmitField('Ban')
 
 

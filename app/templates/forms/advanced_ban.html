@@ -5,7 +5,17 @@
 {% block main_content %}
     <div>
         <p class="page-info">
-            TODO: write text about Advanced Bans
+            For the edge cases where <a href="{{ url_for('RefreshPurgeView:simple_ban_form') }}">Simple Bans</a>
+            are insufficient, this page allows you to send over a custom-written Ban expression. This module will
+            try to do as much input sanitization as it can, but ultimately there's a risk that the Ban won't be
+            syntactically valid and will fail to be added to Varnish. Because the internal implementation of VCL.ban()
+            fails silently, the RPAPI can't tell the difference between a successfully added Ban and a failed one.
+            This means that this page should always return a "success" status when the form is submitted, but it
+            doesn't necessarily mean that the Ban was accepted.
+        </p>
+        <p class="page-info">
+            If you want to read about Ban syntax, here's some
+            <a href="https://varnish-cache.org/docs/6.0/reference/vcl.html#vcl-7-ban">documentation</a>.
         </p>
 
         {% if abform.errors %}
@@ -15,6 +25,7 @@
         <p class="note">
             <span class="star">* </span><span class="warning"> All fields are required</span>
         </p>
+        <br/>
 
         <form id="rpapi_advancedban" method="POST" action="{{ url_for('RefreshPurgeView:advanced_ban_submit') }}">
             {{ abform.render_to_html() | safe }}

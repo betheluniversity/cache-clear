@@ -5,7 +5,17 @@
 {% block main_content %}
     <div>
         <p class="page-info">
-            TODO: write text about Purging and Refreshing
+            Purging an object from Varnish's cache is the only way to directly have it removed. Bans prevent old
+            content from being served, but the old content will remain in the cache until it expires. Purging is
+            useful if Varnish caches a bad response, like an old version of an image or a 404 Not Found. Instead of
+            having to wait for the bad content to expire naturally, it can be Purged right away. Hopefully we can
+            develop a way to do mass Purges instead of one-by-one.
+        </p>
+        <p class="page-info">
+            Choosing to Refresh an object will first Purge the object from Varnish's cache, and then automatically
+            have Varnish fetch a new response from the backend server and store that new object in the cache. While
+            this makes Refresh the obvious choice for single pages, it would put a large load on the backend server
+            if hundreds of pages were mass-Refreshed (if that ever gets developed).
         </p>
 
         {% if prform.errors %}
@@ -15,6 +25,7 @@
         <p class="note">
             <span class="star">* </span><span class="warning"> All fields are required</span>
         </p>
+        <br/>
 
         <form id="rpapi_purgerefresh" method="POST" action="{{ url_for('RefreshPurgeView:purge_refresh_submit') }}">
             {{ prform.render_to_html() | safe }}

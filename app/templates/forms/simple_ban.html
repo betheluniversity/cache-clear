@@ -5,7 +5,24 @@
 {% block main_content %}
     <div>
         <p class="page-info">
-            TODO: write text about Simple Bans
+            Varnish has the ability to Ban content from being served from its cache, but it has been
+            implemented in a counter-intuitive way. Once a Ban has been added to Varnish's cache,
+            any time Varnish tries to fetch a response from the cache it first checks if it's trying to
+            return "banned" content. Any request that matches a Ban's expression and would try to fetch content
+            that has been in the cache longer than that Ban is instead rerouted to pull its response from the
+            backend directly.
+        </p>
+        <p class="page-info">
+            To put it into more useful terms: if a whole bunch of bad stuff gets stored in the cache,
+            you can create a Ban that makes all users get the correct response from the backend directly. Bans
+            are compatible with Regular Expressions, so it should be possible to ban by bulk as well as by a specific
+            route like Purging or Refreshing.
+        </p>
+        <p class="page-info">
+            Most Bans are based off of two things: which domain received the request, and what URLs need to be banned.
+            Because of that, this form provides a quick and easy way to create that type of Ban. Simply enter in a
+            pair of regexes that match the subset of content that you want to Ban, and this app and the RPAPI will
+            take care of the rest.
         </p>
 
         {% if sbform.errors %}
@@ -15,6 +32,7 @@
         <p class="note">
             <span class="star">* </span><span class="warning"> All fields are required</span>
         </p>
+        <br/>
 
         <form id="rpapi_simpleban" method="POST" action="{{ url_for('RefreshPurgeView:simple_ban_submit') }}">
             {{ sbform.render_to_html() | safe }}
