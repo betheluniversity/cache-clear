@@ -14,12 +14,12 @@ varnish_domains = [
     'sem.bethel.edu',
     'ems.bethel.edu',
     'business-signage.bethel.edu',
+    'hall-of-fame.bethel.edu',
     'beacon.bethel.edu',
     'bethelnet.bethel.edu',
     'classifieds.bethel.edu',
     'book-exchange.bethel.edu',
     'maps.bethel.edu',
-    'mahara.bethel.edu',
     'wufoo.bethel.edu',
     'programs.bethel.edu',
 ]
