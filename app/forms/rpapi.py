@@ -1,11 +1,11 @@
 import re
 
 from flask import render_template
-from wtforms import Form, StringField, SubmitField, validators, RadioField, ValidationError
+from wtforms import Form, StringField, SubmitField, validators, RadioField, ValidationError, SelectField
 
 varnish_domains = [
     'www.bethel.edu',
-    'cdn.bethel.edu',  # cdn[1-4] are all aliases; the actual backend vhost is listening for this request
+    'cdn.bethel.edu',  # cdn[1-4] are all aliases; the actual backend vhost is listening for this domain
     'bsg.bethel.edu',
     'bsa.bethel.edu',
     'cas.bethel.edu',
@@ -23,6 +23,8 @@ varnish_domains = [
     'wufoo.bethel.edu',
     'programs.bethel.edu',
 ]
+
+cacheable_domain_indexes = range(8) + [9, 10]
 
 
 #######################################################
@@ -50,6 +52,25 @@ def valid_purge_uri():
             raise ValidationError('The URL at the end of the path needs to have at least a "/" at the beginning')
 
     return _uri
+
+
+def url_regex_not_too_broad():
+
+    def _specific_regex(form, field):
+        # Regex: ^(\/?\.[*+]|\(\/?\.[*+]\)|\/\(\.[*+]\))$
+        example_regexes_that_are_too_broad = [
+            '.*', '.+',
+            '/.*', '/.+',
+            '(.*)', '(.+)',
+            '/(.*)', '/(.+)',
+            '(/.*)', '(/.+)'
+        ]
+
+        if field.data in example_regexes_that_are_too_broad:
+            raise ValidationError('"%s" would match too many URLs and cause Varnish to slow down. '
+                                  'Please be more specific.' % field.data)
+
+    return _specific_regex
 
 
 def valid_ban_syntax():
@@ -135,12 +156,12 @@ class PurgeRefreshForm(RenderableForm):
 
 class SimpleBanForm(RenderableForm):
     # Because Bans are regex-compatible, it's not practical to do any type of data validation.
-    # As long as there's a value submitted, we can pass it on to the Refresh/Purge API.
+    # All we can do is make sure that they don't ban all URLs for a domain, and then pass it on
+    # to the Refresh/Purge API.
 
-    # TODO: add validation to make sure that no one can ban all content from being cached
-    # (req.http.host ~ .* && req.url ~ .*)
-    host = StringField('Domain:', [validators.DataRequired()], default='cdn[1-4]\.bethel\.edu')
-    url = StringField('URL:', [validators.DataRequired()], default='/images/.*\.png')
+    host = SelectField('Domain:', [validators.DataRequired()],
+                       choices=[(varnish_domains[i], varnish_domains[i]) for i in cacheable_domain_indexes])
+    url = StringField('URL:', [validators.DataRequired(), url_regex_not_too_broad()], default='/images/.*\.png')
     submit = SubmitField('Ban')
 
 

@@ -20,7 +20,7 @@ def rpapi_call(action, host=None, url=None, advanced_ban_expression=None):
         headers_to_send = {
             'API-Action': 'ban',
             # TODO: when smart bans get enabled, change this to 'obj.http.x-host && obj.http.x-url'
-            'Ban-Expression': 'req.http.host ~ %s && req.url ~ %s' % (host, url)
+            'Ban-Expression': 'req.http.host == %s && req.url ~ %s' % (host, url)
         }
     elif action == 'advanced_ban' and advanced_ban_expression is not None:
         """
