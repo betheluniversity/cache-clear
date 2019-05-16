@@ -9,7 +9,7 @@
             <label>Path
                 <input type="text" name="path" id="path"/>
             </label>
-            <a id="submit" class="btn btn-primary">Submit</a>
+            <a id="submit" class="btn btn-primary">Clear</a>
         </div>
         <p id="output" style="white-space: pre"></p>
     </div>
@@ -34,7 +34,6 @@
                 var value = input.val();
                 if (value.length > 0 && value[0] !== '/') {
                     input.val('/' + value);
-                    // value = input.val();
                 }
             });
         });

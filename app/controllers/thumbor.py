@@ -43,7 +43,6 @@ def clear_image_cache(image_path):
         sp2 = subprocess.Popen('rm ' + result_path, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # response = subprocess.call(['rm', result_path])
         response = sp2.communicate()
-        print response
         if response == ('', ''):
             matches += "Deleted resize at \"%s\"\n" % result_path
         else:

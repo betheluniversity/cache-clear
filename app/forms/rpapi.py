@@ -31,27 +31,31 @@ cacheable_domain_indexes = range(8) + [9, 10]
 #                   Custom Validators                 #
 #######################################################
 
-def valid_purge_uri():
+def valid_purge_url():
 
-    def _uri(form, field):
+    def _url(form, field):
         # This regex should match anything from www.google.com to https://cdn1.bethel.edu/resize/
-        uri = re.compile(r'^(https?://)?([A-Za-z0-9-]+\.[A-Za-z0-9-]+\.[A-Za-z0-9-]+)(/.*)?$').search(field.data)
+        url = re.compile(r'^(https?://)?([A-Za-z0-9-]+\.[A-Za-z0-9-]+\.[A-Za-z0-9-]+)(/.*)?$').search(field.data)
 
         # First, assert that the value submitted is syntactically a URI
-        if uri is None:
+        if url is None:
             raise ValidationError('The path submitted is not a valid URI')
 
         # Second, assert that the domain is one of the domains behind Varnish
-        domain = uri.group(2)
+        domain = url.group(2)
         if domain not in varnish_domains:
-            raise ValidationError('%s isn\'t behind Varnish' % domain)
+            raise ValidationError('"%s" isn\'t behind Varnish' % domain)
+
+        # Third, assert that the domain is one of the domains that can be cached by Varnish
+        if domain not in [varnish_domains[i] for i in cacheable_domain_indexes]:
+            raise ValidationError('"%s" isn\'t one of the domains the Varnish caches' % domain)
 
         # Finally, assert that the URL is at least '/'
-        url = uri.group(3)
+        url = url.group(3)
         if url is None:
             raise ValidationError('The URL at the end of the path needs to have at least a "/" at the beginning')
 
-    return _uri
+    return _url
 
 
 def url_regex_not_too_broad():
@@ -147,7 +151,7 @@ class RenderableForm(Form):
 
 
 class PurgeRefreshForm(RenderableForm):
-    uri = StringField('Path:', [validators.DataRequired(), valid_purge_uri()])
+    url = StringField('URL:', [validators.DataRequired(), valid_purge_url()])
     api_action = RadioField('Action:', [validators.DataRequired()],
                             choices=[('purge', 'Purge'), ('refresh', 'Refresh')],
                             default='refresh')
@@ -161,7 +165,7 @@ class SimpleBanForm(RenderableForm):
 
     host = SelectField('Domain:', [validators.DataRequired()],
                        choices=[(varnish_domains[i], varnish_domains[i]) for i in cacheable_domain_indexes])
-    url = StringField('URL:', [validators.DataRequired(), url_regex_not_too_broad()], default='/images/.*\.png')
+    path = StringField('Path:', [validators.DataRequired(), url_regex_not_too_broad()], default='/images/.*\.png')
     submit = SubmitField('Ban')
 
 
