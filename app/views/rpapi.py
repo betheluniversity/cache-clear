@@ -27,7 +27,7 @@ class RefreshPurgeView(FlaskView):
             abform = AdvancedBanForm()
             return render_template('rpapi.html', **locals())
 
-        host_url_groups = re.compile(r'(https?://)?([^/]+)(/.*)').search(prform.get('uri'))
+        host_url_groups = re.compile(r'(https?://)?([^/]+)(/.*)').search(prform.get('url'))
         host = host_url_groups.group(2)
         url = host_url_groups.group(3)
 
@@ -43,7 +43,7 @@ class RefreshPurgeView(FlaskView):
             abform = AdvancedBanForm()
             return render_template('rpapi.html', **locals())
 
-        rpapi_result = rpapi_call(action='simple_ban', host=sbform.get('host'), url=sbform.get('url'))
+        rpapi_result = rpapi_call(action='simple_ban', host=sbform.get('host'), url=sbform.get('path'))
         return render_template('rpapi_response.html', api_response=rpapi_result)
 
     @route('/advanced-ban-submit', methods=['POST'])
