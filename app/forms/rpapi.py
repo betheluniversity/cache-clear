@@ -39,7 +39,7 @@ def valid_purge_url():
 
         # First, assert that the value submitted is syntactically a URL
         if url is None:
-            raise ValidationError('The data submitted not a valid URL' % url)
+            raise ValidationError('The data submitted not a valid URL')
 
         # Second, assert that the domain is one of the domains behind Varnish
         domain = url.group(2)

@@ -1,12 +1,22 @@
 <nav class="xnavbar navbar-inverse navbar__main" style="background: #123563">
     <div class="inner">
         <div class="navbar__logo-tabs">
-            <a class="logo__link" href="{{ url_for('HomeView:index') }}">
-                <img class="logo--main" src="https://www.bethel.edu/cdn/images/logo.png" alt="Bethel University logo">
-            </a>
-            <div class="navbar__pages">
-                <a href="{{ url_for('HomeView:logout') }}">Logout</a>
+            <div>
+                <a class="logo__link" href="{{ url_for('HomeView:index') }}">
+                    <img class="logo--main" src="https://www.bethel.edu/cdn/images/logo.png" alt="Bethel University logo">
+                </a>
+
+                <div class="navbar__pages">
+                    <a href="{{ url_for('ThumborView:index') }}" class="navbar__link {{ 'active' if 'thumbor' in request.path else '' }}">
+                        Thumbor
+                    </a>
+                    <a href="{{ url_for('RefreshPurgeView:index') }}" class="navbar__link {{ 'active' if 'rpapi' in request.path else '' }}">
+                        RPAPI
+                    </a>
+                </div>
             </div>
+
+            <a href="{{ url_for('HomeView:logout') }}" class="navbar__link">Logout</a>
         </div>
     </div>
 </nav>
