@@ -37,9 +37,9 @@ def valid_purge_url():
         # This regex should match anything from www.google.com to https://cdn1.bethel.edu/resize/
         url = re.compile(r'^(https?://)?([A-Za-z0-9-]+\.[A-Za-z0-9-]+\.[A-Za-z0-9-]+)(/.*)?$').search(field.data)
 
-        # First, assert that the value submitted is syntactically a URI
+        # First, assert that the value submitted is syntactically a URL
         if url is None:
-            raise ValidationError('The path submitted is not a valid URI')
+            raise ValidationError('The data submitted not a valid URL' % url)
 
         # Second, assert that the domain is one of the domains behind Varnish
         domain = url.group(2)
@@ -48,12 +48,12 @@ def valid_purge_url():
 
         # Third, assert that the domain is one of the domains that can be cached by Varnish
         if domain not in [varnish_domains[i] for i in cacheable_domain_indexes]:
-            raise ValidationError('"%s" isn\'t one of the domains the Varnish caches' % domain)
+            raise ValidationError('"%s" isn\'t one of the domains that Varnish caches' % domain)
 
         # Finally, assert that the URL is at least '/'
         url = url.group(3)
         if url is None:
-            raise ValidationError('The URL at the end of the path needs to have at least a "/" at the beginning')
+            raise ValidationError('The path at the end of the URL needs to have at least a "/" at the beginning')
 
     return _url
 
@@ -144,7 +144,7 @@ def valid_ban_syntax():
 
 class RenderableForm(Form):
     def render_to_html(self):
-        return render_template('forms/generic_form.html', fields=self._fields.items())
+        return render_template('generic_form.html', fields=self._fields.items())
 
     def get(self, key):
         return self._fields.get(key).data

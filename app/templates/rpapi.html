@@ -4,34 +4,132 @@
 
 {% block main_content %}
     <div>
-        <h4>Refresh/Purge API</h4>
-        <article>
-            <p class="page-info">
-                Welcome to the landing page for the Refresh/Purge API! It has been designed to allow for simple
-                interfacing to Varnish's cache that doesn't require SSH access or knowledge of how to use Varnish's
-                Command Line Interface. All members of the WebApps and Comm/Marketing teams should have access to
-                this module.
+        <div id="info">
+            <h4>Refresh/Purge API</h4>
+            <article>
+                <p class="page-info">
+                    Welcome to the landing page for the Refresh/Purge API! It has been designed to allow for simple
+                    interfacing to Varnish's cache that doesn't require SSH access or knowledge of how to use Varnish's
+                    Command Line Interface. All members of the WebApps and Comm/Marketing teams should have access to
+                    this module.
+                </p>
+                <p class="page-info">
+                    There are 3 functions that the RPAPI can perform: Purging an object currently in Varnish's cache,
+                    Refreshing an object (Purges it first, then fetches a new version and stores it in the cache), and
+                    Banning a set of objects from being served from the cache. For most purposes, Bans can be simplified
+                    down to just choosing a domain and a URL (both of which can be regular expressions). If a more
+                    complicated Ban needs to be sent, this module can also send a custom Ban expression.
+                </p>
+            </article>
+        </div>
+        <hr/>
+        <div id="purge-refresh">
+            <h4>Purge or Refresh</h4>
+            <article>
+                <p class="page-info">
+                    Purging an object from Varnish's cache is the only way to directly have it removed. Bans prevent old
+                    content from being served, but the old content will remain in the cache until it expires. Purging is
+                    useful if Varnish caches a bad response, like an old version of an image or a 404 Not Found. Instead
+                    of having to wait for the bad content to expire naturally, it can be Purged right away. Hopefully we
+                    can develop a way to do mass Purges instead of one-by-one.
+                </p>
+                <p class="page-info">
+                    Choosing to Refresh an object will first Purge the object from Varnish's cache, and then
+                    automatically have Varnish fetch a new response from the backend server and store that new object
+                    in the cache. While this makes Refresh the obvious choice for single pages, it would put a large
+                    load on the backend server if hundreds of pages were mass-Refreshed (if that ever gets developed).
+                </p>
+                <p class="page-info">
+                    <b>Note:</b> cdn1.bethel.edu, cdn2.bethel.edu, cdn3.bethel.edu, and cdn4.bethel.edu are all cached
+                    by Varnish as "cdn.bethel.edu". If you're going to Purge or Refresh something in CDN, use
+                    "cdn.bethel.edu" as the domain.
+                </p>
+            </article>
+
+            {% if prform.errors %}
+                <span class="error">There were errors with the form submission.</span>
+            {% endif %}
+
+            <p class="note">
+                <span class="star">* </span><span class="warning"> All fields are required</span>
             </p>
-            <p class="page-info">
-                There are 3 functions that the RPAPI can perform: Purging an object currently in Varnish's cache,
-                Refreshing an object (Purges it first, then fetches a new version and stores it in the cache), and
-                Banning a set of objects from being served from the cache. For most purposes, Bans can be simplified
-                down to just choosing a domain and a URL (both of which can be regular expressions). If a more
-                complicated Ban needs to be sent, this module can also send a custom Ban expression.
+            <br/>
+
+            <form id="rpapi_purgerefresh" method="POST" action="{{ url_for('RefreshPurgeView:purge_refresh_submit') }}">
+                {{ prform.render_to_html() | safe }}
+            </form>
+        </div>
+        <hr/>
+        <div id="simple-ban">
+            <h4>Simple Ban</h4>
+            <article>
+                <p class="page-info">
+                    Varnish has the ability to Ban content from being served from its cache, but it has been
+                    implemented in a counter-intuitive way. Once a Ban has been added to Varnish's cache,
+                    any time Varnish tries to fetch a response from the cache it first checks if it's trying to
+                    return "banned" content. Any request that matches a Ban's expression and would try to fetch content
+                    that has been in the cache longer than that Ban is instead rerouted to pull its response from the
+                    backend directly.
+                </p>
+                <p class="page-info">
+                    To put it into more useful terms: if a whole bunch of bad stuff gets stored in the cache,
+                    you can create a Ban that makes all users get the correct response from the backend directly. Bans
+                    are compatible with Regular Expressions, so it should be possible to ban by bulk as well as by a
+                    specific route like Purging or Refreshing.
+                </p>
+                <p class="page-info">
+                    Most Bans are based off of two things: which domain received the request, and what URLs need to be
+                    banned. Because of that, this form provides a quick and easy way to create that type of Ban. Simply
+                    select which domain the Ban should be based on, enter in a Regular Expression for what paths the Ban
+                    should match, and then this app and the RPAPI will take care of the rest.
+                </p>
+            </article>
+
+            {% if sbform.errors %}
+                <span class="error">There were errors with the form submission.</span>
+            {% endif %}
+
+            <p class="note">
+                <span class="star">* </span><span class="warning"> All fields are required</span>
             </p>
-        </article>
-        <br/>
-        <ul>
-            <li>
-                <a href="{{ url_for('RefreshPurgeView:purge_refresh_form') }}">Purge or Refresh</a>
-            </li>
-            <li>
-                <a href="{{ url_for('RefreshPurgeView:simple_ban_form') }}">Simple Ban</a>
-            </li>
-            <li>
-                <a href="{{ url_for('RefreshPurgeView:advanced_ban_form') }}">Advanced Ban</a>
-            </li>
-        </ul>
+            <br/>
+
+            <form id="rpapi_simpleban" method="POST" action="{{ url_for('RefreshPurgeView:simple_ban_submit') }}">
+                {{ sbform.render_to_html() | safe }}
+            </form>
+        </div>
+        <hr/>
+        <div id="advanced-ban">
+            <h4>Advanced Ban</h4>
+             <article>
+                <p class="page-info">
+                    For the edge cases where Simple Bans are insufficient, this page allows you to send over a
+                    custom-written Ban expression. This module will try to do as much input sanitization as it can,
+                    but ultimately there's a risk that the Ban won't be syntactically valid and will fail to be added
+                    to Varnish. Because the internal implementation of VCL.ban() fails silently, the RPAPI can't tell
+                    the difference between a successfully added Ban and a failed one. This means that this page should
+                    always return a "success" status when the form is submitted, but it doesn't necessarily mean that
+                    the Ban was accepted.
+                </p>
+                <p class="page-info">
+                    If you want to read about Ban syntax, here's some
+                    <a href="https://varnish-cache.org/docs/6.0/reference/vcl.html#vcl-7-ban">documentation</a>.
+                </p>
+            </article>
+
+            {% if abform.errors %}
+                <span class="error">There were errors with the form submission.</span>
+            {% endif %}
+
+            <p class="note">
+                <span class="star">* </span><span class="warning"> All fields are required</span>
+            </p>
+            <br/>
+
+            <form id="rpapi_advancedban" method="POST" action="{{ url_for('RefreshPurgeView:advanced_ban_submit') }}">
+                {{ abform.render_to_html() | safe }}
+            </form>
+        </div>
     </div>
 {% endblock %}
 
