@@ -140,3 +140,8 @@ span.warning {
 article {
     line-height: 130%;
 }
+
+/* Override _reboot.scss' "margin-bottom: 1rem" for radio buttons in forms */
+form > div > div > ul {
+    margin-bottom: 0;
+}
