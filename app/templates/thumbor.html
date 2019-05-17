@@ -6,21 +6,23 @@
     <div class="content">
         <div class="form">
             <h4>Thumbor Cache</h4>
-            <p class="page-info">
-                Here's how to use this page:
-            </p>
-            <ol>
-                <li>
-                    Identify the Thumbor-resized URL (something like
-                    "https://cdn1.bethel.edu/resize/unsafe/400x0/smart/https://www.bethel.edu/news/articles/2019/images/mechanical-engineering.jpg")
-                </li>
-                <li>
-                    Extract the path to the original image (in this example: "/news/articles/2019/images/mechanical-engineering.jpg")
-                </li>
-                <li>
-                    Enter that path into the field below, and click the button labeled "Clear"
-                </li>
-            </ol>
+            <article>
+                <p class="page-info">
+                    Here's how to use this page:
+                </p>
+                <ol>
+                    <li>
+                        Identify the Thumbor-resized URL (something like
+                        "https://cdn1.bethel.edu/resize/unsafe/400x0/smart/https://www.bethel.edu/news/articles/2019/images/mechanical-engineering.jpg")
+                    </li>
+                    <li>
+                        Extract the path to the original image (in this example: "/news/articles/2019/images/mechanical-engineering.jpg")
+                    </li>
+                    <li>
+                        Enter that path into the field below, and click the button labeled "Clear"
+                    </li>
+                </ol>
+            </article>
             <br/>
             <label>Path
                 <input type="text" name="path" id="path"/>
@@ -32,6 +34,7 @@
 {% endblock %}
 
 {% block custom_js %}
+    <script src="{{ url_for('static', filename = 'js/readmore.js') }}"></script>
     <script>
         $(document).ready(function () {
             $("#submit").bind("click", function(){
@@ -52,6 +55,12 @@
                     input.val('/' + value);
                 }
             });
+        });
+
+        $('article').readmore('article', {
+            moreLink: '<a href="#">Show Documentation</a>',
+            lessLink: '<a href="#">Hide Documentation</a>',
+            collapsedHeight: 0
         });
     </script>
 {% endblock %}

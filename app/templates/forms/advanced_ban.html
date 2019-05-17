@@ -5,19 +5,21 @@
 {% block main_content %}
     <div>
         <h4>Advanced Ban</h4>
-        <p class="page-info">
-            For the edge cases where <a href="{{ url_for('RefreshPurgeView:simple_ban_form') }}">Simple Bans</a>
-            are insufficient, this page allows you to send over a custom-written Ban expression. This module will
-            try to do as much input sanitization as it can, but ultimately there's a risk that the Ban won't be
-            syntactically valid and will fail to be added to Varnish. Because the internal implementation of VCL.ban()
-            fails silently, the RPAPI can't tell the difference between a successfully added Ban and a failed one.
-            This means that this page should always return a "success" status when the form is submitted, but it
-            doesn't necessarily mean that the Ban was accepted.
-        </p>
-        <p class="page-info">
-            If you want to read about Ban syntax, here's some
-            <a href="https://varnish-cache.org/docs/6.0/reference/vcl.html#vcl-7-ban">documentation</a>.
-        </p>
+        <article>
+            <p class="page-info">
+                For the edge cases where <a href="{{ url_for('RefreshPurgeView:simple_ban_form') }}">Simple Bans</a>
+                are insufficient, this page allows you to send over a custom-written Ban expression. This module will
+                try to do as much input sanitization as it can, but ultimately there's a risk that the Ban won't be
+                syntactically valid and will fail to be added to Varnish. Because the internal implementation of VCL.ban()
+                fails silently, the RPAPI can't tell the difference between a successfully added Ban and a failed one.
+                This means that this page should always return a "success" status when the form is submitted, but it
+                doesn't necessarily mean that the Ban was accepted.
+            </p>
+            <p class="page-info">
+                If you want to read about Ban syntax, here's some
+                <a href="https://varnish-cache.org/docs/6.0/reference/vcl.html#vcl-7-ban">documentation</a>.
+            </p>
+        </article>
 
         {% if abform.errors %}
             <span class="error">There were errors with the form submission.</span>
@@ -32,4 +34,15 @@
             {{ abform.render_to_html() | safe }}
         </form>
     </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{{ url_for('static', filename = 'js/readmore.js') }}"></script>
+    <script>
+        $('article').readmore('article', {
+            moreLink: '<a href="#">Show Documentation</a>',
+            lessLink: '<a href="#">Hide Documentation</a>',
+            collapsedHeight: 0
+        });
+    </script>
 {% endblock %}

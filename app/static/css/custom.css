@@ -136,3 +136,7 @@ span.warning {
     font-style: italic;
     font-size: .8em;
 }
+
+article {
+    line-height: 130%;
+}

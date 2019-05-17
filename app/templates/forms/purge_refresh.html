@@ -5,23 +5,25 @@
 {% block main_content %}
     <div>
         <h4>Purge or Refresh</h4>
-        <p class="page-info">
-            Purging an object from Varnish's cache is the only way to directly have it removed. Bans prevent old
-            content from being served, but the old content will remain in the cache until it expires. Purging is
-            useful if Varnish caches a bad response, like an old version of an image or a 404 Not Found. Instead of
-            having to wait for the bad content to expire naturally, it can be Purged right away. Hopefully we can
-            develop a way to do mass Purges instead of one-by-one.
-        </p>
-        <p class="page-info">
-            Choosing to Refresh an object will first Purge the object from Varnish's cache, and then automatically
-            have Varnish fetch a new response from the backend server and store that new object in the cache. While
-            this makes Refresh the obvious choice for single pages, it would put a large load on the backend server
-            if hundreds of pages were mass-Refreshed (if that ever gets developed).
-        </p>
-        <p class="page-info">
-            <b>Note:</b> cdn1.bethel.edu, cdn2.bethel.edu, cdn3.bethel.edu, and cdn4.bethel.edu are all cached by Varnish as
-            "cdn.bethel.edu". If you're going to Purge or Refresh something in CDN, use "cdn.bethel.edu" as the domain.
-        </p>
+        <article>
+            <p class="page-info">
+                Purging an object from Varnish's cache is the only way to directly have it removed. Bans prevent old
+                content from being served, but the old content will remain in the cache until it expires. Purging is
+                useful if Varnish caches a bad response, like an old version of an image or a 404 Not Found. Instead of
+                having to wait for the bad content to expire naturally, it can be Purged right away. Hopefully we can
+                develop a way to do mass Purges instead of one-by-one.
+            </p>
+            <p class="page-info">
+                Choosing to Refresh an object will first Purge the object from Varnish's cache, and then automatically
+                have Varnish fetch a new response from the backend server and store that new object in the cache. While
+                this makes Refresh the obvious choice for single pages, it would put a large load on the backend server
+                if hundreds of pages were mass-Refreshed (if that ever gets developed).
+            </p>
+            <p class="page-info">
+                <b>Note:</b> cdn1.bethel.edu, cdn2.bethel.edu, cdn3.bethel.edu, and cdn4.bethel.edu are all cached by Varnish as
+                "cdn.bethel.edu". If you're going to Purge or Refresh something in CDN, use "cdn.bethel.edu" as the domain.
+            </p>
+        </article>
 
         {% if prform.errors %}
             <span class="error">There were errors with the form submission.</span>
@@ -36,4 +38,15 @@
             {{ prform.render_to_html() | safe }}
         </form>
     </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{{ url_for('static', filename = 'js/readmore.js') }}"></script>
+    <script>
+        $('article').readmore('article', {
+            moreLink: '<a href="#">Show Documentation</a>',
+            lessLink: '<a href="#">Hide Documentation</a>',
+            collapsedHeight: 0
+        });
+    </script>
 {% endblock %}

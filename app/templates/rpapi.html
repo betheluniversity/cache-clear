@@ -5,19 +5,21 @@
 {% block main_content %}
     <div>
         <h4>Refresh/Purge API</h4>
-        <p class="page-info">
-            Welcome to the landing page for the Refresh/Purge API! It has been designed to allow for simple
-            interfacing to Varnish's cache that doesn't require SSH access or knowledge of how to use Varnish's
-            Command Line Interface. All members of the WebApps and Comm/Marketing teams should have access to
-            this module.
-        </p>
-        <p class="page-info">
-            There are 3 functions that the RPAPI can perform: Purging an object currently in Varnish's cache,
-            Refreshing an object (Purges it first, then fetches a new version and stores it in the cache), and
-            Banning a set of objects from being served from the cache. For most purposes, Bans can be simplified
-            down to just choosing a domain and a URL (both of which can be regular expressions). If a more
-            complicated Ban needs to be sent, this module can also send a custom Ban expression.
-        </p>
+        <article>
+            <p class="page-info">
+                Welcome to the landing page for the Refresh/Purge API! It has been designed to allow for simple
+                interfacing to Varnish's cache that doesn't require SSH access or knowledge of how to use Varnish's
+                Command Line Interface. All members of the WebApps and Comm/Marketing teams should have access to
+                this module.
+            </p>
+            <p class="page-info">
+                There are 3 functions that the RPAPI can perform: Purging an object currently in Varnish's cache,
+                Refreshing an object (Purges it first, then fetches a new version and stores it in the cache), and
+                Banning a set of objects from being served from the cache. For most purposes, Bans can be simplified
+                down to just choosing a domain and a URL (both of which can be regular expressions). If a more
+                complicated Ban needs to be sent, this module can also send a custom Ban expression.
+            </p>
+        </article>
         <br/>
         <ul>
             <li>
@@ -31,4 +33,15 @@
             </li>
         </ul>
     </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{{ url_for('static', filename = 'js/readmore.js') }}"></script>
+    <script>
+        $('article').readmore('article', {
+            moreLink: '<a href="#">Show Documentation</a>',
+            lessLink: '<a href="#">Hide Documentation</a>',
+            collapsedHeight: 0
+        });
+    </script>
 {% endblock %}

@@ -5,22 +5,24 @@
 {% block main_content %}
     <div class="content">
         <h4>Cache Clear</h4>
-        <p class="page-info">
-            This app is designed to interface with the Thumbor image resize application, and with the Varnish server
-            that caches static files for most of our websites.
-        </p>
-        <p class="page-info">
-            When Thumbor is asked to resize an image, it downloads a local copy of the original image, stores it in
-            case it has to resize it again, resizes the downloaded copy into the request dimensions, stores the resize
-            in a different folder, and then returns the resized image. This app is able to remove both the original
-            downloaded version as well as all resized versions.
-        </p>
-        <p class="page-info">
-            Varnish has a lot of complex functionality, but this app only cares that Varnish can cache HTTP responses.
-            Once Varnish has cached something (like an image, JavaScript file, or CSS stylesheet), this app can Purge
-            that response from Varnish, Refresh the response that Varnish has cached, or send a Ban to Varnish that
-            prevents Varnish from serving the cached response.
-        </p>
+        <article>
+            <p class="page-info">
+                This app is designed to interface with the Thumbor image resize application, and with the Varnish server
+                that caches static files for most of our websites.
+            </p>
+            <p class="page-info">
+                When Thumbor is asked to resize an image, it downloads a local copy of the original image, stores it in
+                case it has to resize it again, resizes the downloaded copy into the request dimensions, stores the resize
+                in a different folder, and then returns the resized image. This app is able to remove both the original
+                downloaded version as well as all resized versions.
+            </p>
+            <p class="page-info">
+                Varnish has a lot of complex functionality, but this app only cares that Varnish can cache HTTP responses.
+                Once Varnish has cached something (like an image, JavaScript file, or CSS stylesheet), this app can Purge
+                that response from Varnish, Refresh the response that Varnish has cached, or send a Ban to Varnish that
+                prevents Varnish from serving the cached response.
+            </p>
+        </article>
         <br/>
         <ul>
             <li>
@@ -33,8 +35,13 @@
     </div>
 {% endblock %}
 
-
-
-
-
-
+{% block custom_js %}
+    <script src="{{ url_for('static', filename = 'js/readmore.js') }}"></script>
+    <script>
+        $('article').readmore('article', {
+            moreLink: '<a href="#">Show Documentation</a>',
+            lessLink: '<a href="#">Hide Documentation</a>',
+            collapsedHeight: 0
+        });
+    </script>
+{% endblock %}
