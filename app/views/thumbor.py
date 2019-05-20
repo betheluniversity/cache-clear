@@ -2,14 +2,19 @@
 
 # Imports from packages installed from requirements.txt
 from flask import render_template, request
-from flask_classy import FlaskView, route
+from flask_classy import route
 from werkzeug.datastructures import ImmutableMultiDict
 
 # Imports from elsewhere in this project
 from app.controllers.thumbor import clear_image_cache
+from app.views.base import HomeView
 
 
-class ThumborView(FlaskView):
+class ThumborView(HomeView):
+
+    # Call HomeView's before_request to make sure session[] is set
+    def before_request(self, name, **kwargs):
+        super(ThumborView, self).before_request(name)
 
     def index(self):
         return render_template('thumbor.html')

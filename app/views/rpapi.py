@@ -3,14 +3,19 @@ import re
 
 # Imports from packages installed from requirements.txt
 from flask import render_template, request
-from flask_classy import FlaskView, route
+from flask_classy import route
 
 # Imports from elsewhere in this project
 from app.forms.rpapi import PurgeRefreshForm, SimpleBanForm, AdvancedBanForm
 from app.controllers.rpapi import rpapi_call
+from app.views.base import HomeView
 
 
-class RefreshPurgeView(FlaskView):
+class RefreshPurgeView(HomeView):
+
+    # Call HomeView's before_request to make sure session[] is set
+    def before_request(self, name, **kwargs):
+        super(RefreshPurgeView, self).before_request(name)
 
     def index(self):
         prform = PurgeRefreshForm()
