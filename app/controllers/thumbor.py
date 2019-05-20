@@ -1,13 +1,9 @@
 # Globals
-import fnmatch
 import hashlib
 import re
-import base64
-import os
 import subprocess
 
 from app import app
-from flask import Markup
 
 
 def clear_image_cache(image_path):
@@ -18,18 +14,14 @@ def clear_image_cache(image_path):
 
     resp = []
 
-    def pad(s):
-        return s + (16 - len(s) % 16) * "{"
-
     def path_on_filesystem(path):
-        path = re.sub("\:", "%3A", path)
+        path = re.sub(":", "%3A", path)
         digest = hashlib.sha1(path.encode('utf-8')).hexdigest()
         return "%s/%s/%s" % (
             app.config['THUMBOR_STORAGE_LOCATION'].rstrip('/'),
             digest[:2],
             digest[2:]
         )
-
 
     for prefix in ['http://www.bethel.edu', 'https://www.bethel.edu',
                    'http://staging.bethel.edu', 'https://staging.bethel.edu']:

@@ -1,0 +1,72 @@
+{% extends 'bases/base.html' %}
+
+{% set page_title = 'Thubmor' %}
+
+{% block main_content %}
+    <div class="content">
+        <div class="form">
+            <h4>Thumbor Cache</h4>
+            <article>
+                <p class="page-info">
+                    Here's how to use this page:
+                </p>
+                <ol>
+                    <li>
+                        Identify the Thumbor-resized URL (something like
+                        "https://cdn1.bethel.edu/resize/unsafe/400x0/smart/https://www.bethel.edu/news/articles/2019/images/mechanical-engineering.jpg")
+                    </li>
+                    <li>
+                        Extract the path to the original image (in this example: "/news/articles/2019/images/mechanical-engineering.jpg")
+                    </li>
+                    <li>
+                        Enter that path into the field below, and click the button labeled "Clear"
+                    </li>
+                </ol>
+            </article>
+            <br/>
+            <label>Path
+                <input type="text" name="path" id="path"/>
+            </label>
+            <a id="submit" class="btn btn-primary">Clear</a>
+        </div>
+        <p id="output" style="white-space: pre"></p>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+    <script src="{{ url_for('static', filename = 'js/readmore.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $("#submit").bind("click", function(){
+                var urlpath = $("#path").val();
+                var input_data = {'path': urlpath};
+                var cacheurl = "{{ url_for('ThumborView:submit') }}";
+                $.post(cacheurl, input_data, function (data) {
+                    $("#output").text(decodeURI(data));
+                });
+            });
+
+            // Ensure the path contains a '/' in the front and no spaces
+            $('#path').keyup(function () {
+                var input = $(this);
+                input.val(input.val().replace(/ /g, ''));
+                var value = input.val();
+                if (value.length > 0 && value[0] !== '/') {
+                    input.val('/' + value);
+                }
+            });
+        });
+
+        $('article').readmore('article', {
+            moreLink: '<a href="#">Show Documentation</a>',
+            lessLink: '<a href="#">Hide Documentation</a>',
+            collapsedHeight: 0
+        });
+    </script>
+{% endblock %}
+
+
+
+
+
+

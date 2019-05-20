@@ -2,55 +2,46 @@
 
 {% set page_title = 'Homepage' %}
 
-{% block custom_css %}
-    <style>
-        .example {
-            background-color: aqua;
-        }
-    </style>
-{% endblock %}
-
-{% block custom_js %}
-    <script>
-        $(document).ready(function () {
-            $("#submit").bind("click", function(){
-                var urlpath = $("#path").val();
-                var input_data = {'path': urlpath};
-                var cacheurl = "{{ url_for('HomeView:post') }}";
-                $.post(cacheurl, input_data, function (data) {
-                    $("#output").text(decodeURI(data));
-                });
-            });
-
-            // Ensure the path contains a '/' in the front and no spaces
-            $('#path').keyup(function () {
-                var input = $(this);
-                input.val(input.val().replace(/ /g, ''));
-                var value = input.val();
-                if (value[0] != '/' && value.length > 0) {
-                    input.val("/" + value);
-                    value = input.val();
-                }
-            });
-        });
-    </script>
-{% endblock %}
-
 {% block main_content %}
     <div class="content">
-        <div class="form">
-            <h4>Thumbor Cache</h4>
-            <label>Path
-                <input type="text" name="path" id="path"/>
-            </label>
-            <a id="submit" class="btn btn-primary">Submit</a>
-        </div>
-        <p id="output" style="white-space: pre"></p>
+        <h4>Cache Clear</h4>
+        <article>
+            <p class="page-info">
+                This app is designed to interface with the Thumbor image resize application, and with the Varnish server
+                that caches static files for most of our websites.
+            </p>
+            <p class="page-info">
+                When Thumbor is asked to resize an image, it downloads a local copy of the original image, stores it in
+                case it has to resize it again, resizes the downloaded copy into the request dimensions, stores the resize
+                in a different folder, and then returns the resized image. This app is able to remove both the original
+                downloaded version as well as all resized versions.
+            </p>
+            <p class="page-info">
+                Varnish has a lot of complex functionality, but this app only cares that Varnish can cache HTTP responses.
+                Once Varnish has cached something (like an image, JavaScript file, or CSS stylesheet), this app can Purge
+                that response from Varnish, Refresh the response that Varnish has cached, or send a Ban to Varnish that
+                prevents Varnish from serving the cached response.
+            </p>
+        </article>
+        <br/>
+        <ul>
+            <li>
+                <a href="{{ url_for('ThumborView:index') }}">Clear Thumbor's caches</a>
+            </li>
+            <li>
+                <a href="{{ url_for('RefreshPurgeView:index') }}">Use Varnish's Refresh/Purge API</a>
+            </li>
+        </ul>
     </div>
 {% endblock %}
 
-
-
-
-
-
+{% block custom_js %}
+    <script src="{{ url_for('static', filename = 'js/readmore.js') }}"></script>
+    <script>
+        $('article').readmore('article', {
+            moreLink: '<a href="#">Show Documentation</a>',
+            lessLink: '<a href="#">Hide Documentation</a>',
+            collapsedHeight: 0
+        });
+    </script>
+{% endblock %}

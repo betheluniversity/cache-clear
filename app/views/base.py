@@ -6,11 +6,9 @@ import time
 import ldap
 from flask import make_response, redirect, render_template, request, session, abort
 from flask_classy import FlaskView, route
-from werkzeug.datastructures import ImmutableMultiDict
 
 # Imports from elsewhere in this project
-from app import app, cascade_connector
-from app.controllers.controller import clear_image_cache
+from app import app
 
 
 class HomeView(FlaskView):
@@ -65,19 +63,6 @@ class HomeView(FlaskView):
 
     def index(self):
         return render_template('index.html')
-
-    @route('/post', methods=['POST'])
-    def post(self):
-        form = request.form
-        if isinstance(form, ImmutableMultiDict):
-            form_data = form.to_dict()
-        else:
-            form_data = {}
-
-        cleared_path = form_data['path']
-        matches = clear_image_cache(cleared_path)
-
-        return render_template('ajax_post.html', **locals())
 
     @route('/favicon.ico')
     def favicon(self):
