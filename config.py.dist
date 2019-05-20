@@ -12,6 +12,8 @@ LOGOUT_URL = ''
 SITE_ID = ''
 SOAP_URL = ''
 WSDL = ''
+
+# This login is used to authenticate requests to RPAPI
 CASCADE_LOGIN = {'username': '', 'password': ''}
 STAGING_DESTINATION_ID = ''
 
