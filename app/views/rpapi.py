@@ -34,9 +34,9 @@ class RefreshPurgeView(HomeView):
 
         host_url_groups = re.compile(r'(https?://)?([^/]+)(/.*)').search(prform.get('url'))
         host = host_url_groups.group(2)
-        url = host_url_groups.group(3)
+        path = host_url_groups.group(3)
 
-        rpapi_result = rpapi_call(action=prform.get('api_action'), host=host, url=url)
+        rpapi_result = rpapi_call(action=prform.get('api_action'), host=host, path=path)
         return render_template('rpapi_response.html', api_response=rpapi_result)
 
     @route('/simple-ban-submit', methods=['POST'])
@@ -48,7 +48,7 @@ class RefreshPurgeView(HomeView):
             abform = AdvancedBanForm()
             return render_template('rpapi.html', **locals())
 
-        rpapi_result = rpapi_call(action='simple_ban', host=sbform.get('host'), url=sbform.get('path'))
+        rpapi_result = rpapi_call(action='simple_ban', host=sbform.get('host'), path=sbform.get('path'))
         return render_template('rpapi_response.html', api_response=rpapi_result)
 
     @route('/advanced-ban-submit', methods=['POST'])

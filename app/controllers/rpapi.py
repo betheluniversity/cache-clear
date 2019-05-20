@@ -6,20 +6,20 @@ from requests.auth import HTTPBasicAuth
 from app import app
 
 
-def rpapi_call(action, host=None, url=None, advanced_ban_expression=None):
+def rpapi_call(action, host=None, path=None, advanced_ban_expression=None):
     api_destination = 'https://purge.bethel.edu/'
     authentication = HTTPBasicAuth(app.config['CASCADE_LOGIN']['username'], app.config['CASCADE_LOGIN']['password'])
 
-    if action in ['purge', 'refresh'] and host is not None and url is not None:
+    if action in ['purge', 'refresh'] and host is not None and path is not None:
         headers_to_send = {
             'API-Action': action,
             'Purge-Host': host,
-            'Purge-URL': url
+            'Purge-URL': path
         }
-    elif action == 'simple_ban' and host is not None and url is not None:
+    elif action == 'simple_ban' and host is not None and path is not None:
         headers_to_send = {
             'API-Action': 'ban',
-            'Ban-Expression': 'obj.http.x-host == %s && obj.http.x-url ~ %s' % (host, url)
+            'Ban-Expression': 'obj.http.x-host == %s && obj.http.x-url ~ %s' % (host, path)
         }
     elif action == 'advanced_ban' and advanced_ban_expression is not None:
         """
