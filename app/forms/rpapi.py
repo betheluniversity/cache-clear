@@ -12,19 +12,9 @@ varnish_domains = [
     'caps.bethel.edu',
     'gs.bethel.edu',
     'sem.bethel.edu',
-    'ems.bethel.edu',
     'business-signage.bethel.edu',
     'hall-of-fame.bethel.edu',
-    'beacon.bethel.edu',
-    'bethelnet.bethel.edu',
-    'classifieds.bethel.edu',
-    'book-exchange.bethel.edu',
-    'maps.bethel.edu',
-    'wufoo.bethel.edu',
-    'programs.bethel.edu',
 ]
-
-cacheable_domain_indexes = range(8) + [9, 10]
 
 
 #######################################################
@@ -45,10 +35,6 @@ def valid_purge_url():
         domain = url.group(2)
         if domain not in varnish_domains:
             raise ValidationError('"%s" isn\'t behind Varnish' % domain)
-
-        # Third, assert that the domain is one of the domains that can be cached by Varnish
-        if domain not in [varnish_domains[i] for i in cacheable_domain_indexes]:
-            raise ValidationError('"%s" isn\'t one of the domains that Varnish caches' % domain)
 
         # Finally, assert that the URL is at least '/'
         url = url.group(3)
@@ -164,7 +150,7 @@ class SimpleBanForm(RenderableForm):
     # to the Refresh/Purge API.
 
     host = SelectField('Domain:', [validators.DataRequired()],
-                       choices=[(varnish_domains[i], varnish_domains[i]) for i in cacheable_domain_indexes])
+                       choices=[(x, x) for x in varnish_domains])
     path = StringField('Path:', [validators.DataRequired(), url_regex_not_too_broad()], default='/images/.*\.png')
     submit = SubmitField('Ban')
 
