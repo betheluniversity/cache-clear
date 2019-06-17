@@ -31,3 +31,7 @@ class ThumborView(HomeView):
         matches = clear_image_cache(cleared_path)
 
         return render_template('thumbor_success.html', **locals())
+
+    @route('/clear', methods=['POST'])
+    def clear(self, image_path):
+        clear_image_cache(image_path)
