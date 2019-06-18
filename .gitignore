@@ -9,3 +9,4 @@ config.py
 *.db
 
 sqlite_db_repository
+.vscode/settings.json

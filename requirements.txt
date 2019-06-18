@@ -1,7 +1,6 @@
 Flask-Classy
 Flask
 werkzeug
-BeautifulSoup
 python-ldap
 wtforms
 requests

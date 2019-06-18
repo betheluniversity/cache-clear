@@ -62,10 +62,12 @@ class HomeView(FlaskView):
             return abort(403)
 
     def index(self):
+        print('before request')
         return render_template('index.html')
 
     @route('/favicon.ico')
     def favicon(self):
+        print('favicon')
         return redirect('/static/images/favicon.ico')
 
     def logout(self):

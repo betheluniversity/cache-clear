@@ -14,9 +14,11 @@ class ThumborView(HomeView):
 
     # Call HomeView's before_request to make sure session[] is set
     def before_request(self, name, **kwargs):
+        print('before request')
         super(ThumborView, self).before_request(name)
 
     def index(self):
+        print('index')
         return render_template('thumbor.html')
 
     @route('/submit', methods=['POST'])
