@@ -24,7 +24,8 @@ def clear_image_cache(image_path):
         )
 
     for prefix in ['http://www.bethel.edu', 'https://www.bethel.edu',
-                   'http://staging.bethel.edu', 'https://staging.bethel.edu']:
+                   'http://staging.bethel.edu', 'https://staging.bethel.edu',
+                   'www.bethel.edu']:
         path = prefix + image_path
         resp.append(path)
         encrypted_path = path_on_filesystem(path)
